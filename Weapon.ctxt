@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=Weapon
+comment1.params=damage
+comment1.target=void\ setDamage(int)
+comment2.params=
+comment2.target=int\ getDamage()
+comment3.params=spriteArray
+comment3.target=void\ setPlayerSprites(java.lang.String[][])
+comment4.params=
+comment4.target=java.lang.String[][]\ getPlayerSprites()
+comment5.params=weaponImage
+comment5.target=void\ setWeaponImage(greenfoot.GreenfootImage)
+comment6.params=
+comment6.target=greenfoot.GreenfootImage\ getWeaponImage()
+numComments=7
