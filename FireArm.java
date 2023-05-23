@@ -64,7 +64,7 @@ public class FireArm extends Actor implements Weapon
     }
     public boolean isReloaded(){
         if(bulletsLeft > 0){reloaded = true;}
-        else{reloaded = false;}
+        else{reloaded = false;} 
         return reloaded;
     }
     public void shootBullet(){
@@ -74,7 +74,10 @@ public class FireArm extends Actor implements Weapon
                 Game game = (Game) getWorld();
                 Soldier player = game.getPlayer();
                 Bullet bullet = new Bullet(bulletSpeed,damage);
-                getWorld().addObject(bullet, player.getX(), player.getY()+10);
+                if(player.getRotation()>=0 && player.getRotation()<90){ getWorld().addObject(bullet, player.getX(), player.getY()+10);}
+                if(player.getRotation()>=90 && player.getRotation()<180){getWorld().addObject(bullet, player.getX()-10, player.getY());}
+                if(player.getRotation()>=180 && player.getRotation()<270){getWorld().addObject(bullet, player.getX(), player.getY()-10);}
+                if(player.getRotation()>=270 && player.getRotation()<360){getWorld().addObject(bullet, player.getX()+10, player.getY());}
                 bullet.setRotation(player.getRotation());
                 bulletsLeft--;
                 bulletsShot++;
@@ -84,6 +87,5 @@ public class FireArm extends Actor implements Weapon
     }
     public void reload(){
         bulletsLeft = maxAmmo;
-        Greenfoot.playSound("sounds\\Reload\\ReloadGun.mp3");
     }
 }

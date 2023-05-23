@@ -10,15 +10,15 @@ public class Game extends World
     private final int killsTextPositionX = 100, killsTextPositionY = getHeight()-210;
     private final int gunPicturePositionX = 60, gunPicturePositionY = getHeight()-130;
     
-    private final int MAPWIDTH = 1200, MAPHEIGHT = 1000;
-    
-    private int contZombies = 0, kills = 0;
+    private int contZombies = 0;
     private int spawnDelay = ZOMBIE_SPAWN_DELAY_RAND_LIMIT, zombieSpeedLimit = 2;
     private boolean keepSpawning = true;
     private Random rand = new Random();
     private Rifle weapon = new Rifle();
     private Soldier player = new Soldier(weapon);
     private playerAnimator animator = new playerAnimator(player);
+    
+    public int kills = 0;
     
     public Game()
     {    
@@ -57,7 +57,7 @@ public class Game extends World
             int randomSpawnDelay = rand.nextInt(20+(ZOMBIE_SPAWN_DELAY_RAND_LIMIT-20));
             spawnDelay = randomSpawnDelay;
         }
-        if(contZombies == numZombies){keepSpawning = false;}
+        if(contZombies == numZombies - STARTING_NUM_ZOMBIES){keepSpawning = false;}
     }
     private void setZombieSpawningPosition(int walkingSpeed){
         int spawningCorner = rand.nextInt(4);
@@ -85,11 +85,10 @@ public class Game extends World
         showText("Kills: "+kills, killsTextPositionX, killsTextPositionY);
     }
     private void PlayZombieSounds(){
-        GreenfootSound sound = new GreenfootSound("sounds\\ZombieSounds\\ZombieHorde.mp3");
-        sound.play();
-        if(sound.isPlaying() == false){
-            sound.play();
-        }
+        GreenfootSound backgroundMusic = new GreenfootSound("sounds\\AmbienceMusic\\BackgroundMusic.mp3");
+        GreenfootSound zombieSounds = new GreenfootSound("sounds\\ZombieSounds\\ZombieHorde_0.mp3");
+        backgroundMusic.playLoop();
+        zombieSounds.playLoop();
     }
     public void GameOver(){
         removeObjects(getObjects(Actor.class));
@@ -107,5 +106,8 @@ public class Game extends World
     }
     public void setZombieSpawnDelay(int delay){
         spawnDelay = delay;
+    }
+    public void updateKillScore(){
+        kills++;
     }
 }

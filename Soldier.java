@@ -14,7 +14,7 @@ public class Soldier extends Actor
     private final int DIRECTION_UP = 3;
     private final int NOT_MOVING = -1;
     private final int offsetX = 5, offsetY = 5;
-    private final int COUNTDOWN_RELOAD_START_VALUE = 30;
+    private final int COUNTDOWN_RELOAD_START_VALUE = 100;
     private int reloadingDelay = 0, zombieHitDelay = 0;
     private int direction = 0;
     private int action;
@@ -98,8 +98,12 @@ public class Soldier extends Actor
             triggerReloadingDelay = false;
             reloadingDelay = COUNTDOWN_RELOAD_START_VALUE;
         }
+        if(triggerReloadingDelay == true && reloadingDelay == COUNTDOWN_RELOAD_START_VALUE){
+            Greenfoot.playSound("sounds\\Reload\\ReloadGun.mp3");
+        }
         if(triggerReloadingDelay == true){
             reloadingDelay--;
+            action = 2;
         }
     }
     private void CheckIfPlayerIsHit(){

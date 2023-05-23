@@ -54,7 +54,12 @@ public class Zombie extends Actor
             triggerBulletDamage = true;
             getWorld().removeObject(bullet);
             if(health <= 0){
-                getWorld().removeObject(this);
+                Game scene = (Game) getWorld();
+                GreenfootImage blood = new GreenfootImage("images\\Zombies\\export\\zombieBlood.png");
+                blood.scale(40,40);
+                scene.getBackground().drawImage(blood, getX(), getY());
+                scene.updateKillScore();
+                scene.removeObject(this);
             }
         }
         if(triggerBulletDamage == true){

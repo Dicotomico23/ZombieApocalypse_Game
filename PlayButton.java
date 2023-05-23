@@ -12,6 +12,6 @@ public class PlayButton extends ButtonTemplateMethod
         super("play_button");
     }
     public void DoWhenButtonIsPressed(){
-        Greenfoot.setWorld(new Game());
+        Greenfoot.setWorld(new Menu());
     }
 }

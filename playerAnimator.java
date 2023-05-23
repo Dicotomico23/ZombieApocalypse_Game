@@ -7,7 +7,6 @@ public class playerAnimator extends Actor
     private String[][] spriteArray;
     private Soldier player;
     private boolean isReloading = false;
-    private String imagePath;
     private int imageIndex = 0;
     
     public playerAnimator(Soldier player){
@@ -30,8 +29,7 @@ public class playerAnimator extends Actor
             if(imageIndex == spriteArray.length || spriteArray[imageIndex][player.getAction()] == null){
                 imageIndex = 0;
             }
-            imagePath = spriteArray[imageIndex][player.getAction()];
-            GreenfootImage sprite = new GreenfootImage(imagePath);
+            GreenfootImage sprite = new GreenfootImage(spriteArray[imageIndex][player.getAction()]);
             sprite.scale(50,50);
             player.setImage(sprite);
             imageIndex++;

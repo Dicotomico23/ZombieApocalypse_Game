@@ -9,9 +9,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class StartButton extends ButtonTemplateMethod
 {
     public StartButton(){
-        super("play_button");
+        super("start_button");
     }
     public void DoWhenButtonIsPressed(){
-        Greenfoot.setWorld(new Menu());
+        Greenfoot.setWorld(new Game());
     }
 }
