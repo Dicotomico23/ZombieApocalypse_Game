@@ -8,10 +8,12 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class LevelButton extends ButtonTemplateMethod
 {
-    public LevelButton(){
-        super("chooseLevel_button");
+    private Menu menu;
+    public LevelButton(Menu menu){
+        super("chooseLevel_button", 150, 150);
+        this.menu = menu;
     }
-    public void DoWhenButtonIsPressed(){
-        ///
+    public void doWhenButtonIsPressed(){
+        Greenfoot.setWorld(new ChooseMap(menu));
     }
 }

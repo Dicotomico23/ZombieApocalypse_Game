@@ -21,8 +21,8 @@ public class Shotgun extends FireArm
     private final int INDEX_MELEE_ATTACK = 4;
     private String[][] spriteArray;
     
-    GreenfootImage weaponImage = new GreenfootImage("images\\Weapons\\Shotgun\\shotgunImage.png");
-    GreenfootImage bulletImage = new GreenfootImage("images\\Bullets\\HandgunBullets\\handgunBullet.png");
+    private GreenfootImage weaponImage = new GreenfootImage("images\\Weapons\\Shotgun\\shotgunImage.png");
+    private GreenfootImage bulletImage = new GreenfootImage("images\\Bullets\\HandgunBullets\\handgunBullet.png");
     
     public Shotgun()
     {

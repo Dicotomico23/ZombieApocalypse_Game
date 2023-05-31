@@ -1,19 +1,41 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
-/**
- * Write a description of class FireArm here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class FireArm extends Actor implements Weapon
 {
     private int maxAmmo, damage, COUNTDOWN_SHOOTING_START_VALUE = 100, bulletSpeed;
     private int shootingDelay = COUNTDOWN_SHOOTING_START_VALUE, bulletsLeft = maxAmmo, bulletsShot = 0;
-    private boolean reloaded = true;
+    private boolean reloaded = true, noReloading = false;
     private String[][] spriteArray;
-    GreenfootImage weaponImage;
-    GreenfootImage bulletImage;
+    private GreenfootImage weaponImage;
+    private GreenfootImage bulletImage;
+    
+    public boolean isReloaded(){
+        if(bulletsLeft > 0 ){reloaded = true;}
+        else{reloaded = false;} 
+        return reloaded;
+    }
+    public void shootBullet(){
+        shootingDelay--;
+        if (shootingDelay == 0){
+            if(bulletsLeft > 0){
+                Game game = (Game) getWorld();
+                Soldier player = game.getPlayer();
+                Bullet bullet = new Bullet(bulletSpeed,damage);
+                if(player.getRotation()>=0 && player.getRotation()<90){ getWorld().addObject(bullet, player.getX(), player.getY()+10);}
+                if(player.getRotation()>=90 && player.getRotation()<180){getWorld().addObject(bullet, player.getX()-10, player.getY());}
+                if(player.getRotation()>=180 && player.getRotation()<270){getWorld().addObject(bullet, player.getX(), player.getY()-10);}
+                if(player.getRotation()>=270 && player.getRotation()<360){getWorld().addObject(bullet, player.getX()+10, player.getY());}
+                bullet.setRotation(player.getRotation());
+                if(noReloading == false)
+                    bulletsLeft--;
+                bulletsShot++;
+                shootingDelay = COUNTDOWN_SHOOTING_START_VALUE;
+            }
+        }
+    }
+    public void reload(){
+        bulletsLeft = maxAmmo;
+    }
     public void setMaxAmmo(int maxAmmo){
         this.maxAmmo = maxAmmo;
     }
@@ -62,30 +84,7 @@ public class FireArm extends Actor implements Weapon
     public int getBulletsLeft(){
         return bulletsLeft;
     }
-    public boolean isReloaded(){
-        if(bulletsLeft > 0){reloaded = true;}
-        else{reloaded = false;} 
-        return reloaded;
-    }
-    public void shootBullet(){
-        shootingDelay--;
-        if (shootingDelay == 0){
-            if(bulletsLeft > 0){
-                Game game = (Game) getWorld();
-                Soldier player = game.getPlayer();
-                Bullet bullet = new Bullet(bulletSpeed,damage);
-                if(player.getRotation()>=0 && player.getRotation()<90){ getWorld().addObject(bullet, player.getX(), player.getY()+10);}
-                if(player.getRotation()>=90 && player.getRotation()<180){getWorld().addObject(bullet, player.getX()-10, player.getY());}
-                if(player.getRotation()>=180 && player.getRotation()<270){getWorld().addObject(bullet, player.getX(), player.getY()-10);}
-                if(player.getRotation()>=270 && player.getRotation()<360){getWorld().addObject(bullet, player.getX()+10, player.getY());}
-                bullet.setRotation(player.getRotation());
-                bulletsLeft--;
-                bulletsShot++;
-                shootingDelay = COUNTDOWN_SHOOTING_START_VALUE;
-            }
-        }
-    }
-    public void reload(){
-        bulletsLeft = maxAmmo;
+    public void setNoReloading(boolean noReloading){
+        this.noReloading = noReloading;
     }
 }

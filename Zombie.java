@@ -4,21 +4,22 @@ public class Zombie extends Actor
 {
     private final int INDEX_WALKING = 0;
     private final int INDEX_ATTACK = 1;
-    private final int damage = 2;
+    private final int damage = 10;
+    
     private boolean triggerBulletDamage = false;
-    private int movementSpeed = 1, bulletHitDelay = 0;
-    private int health = 100;
-    private int action;
+    
+    private int movementSpeed = 1, bulletHitDelay = 0, action, health = 70;
     private String[][] spriteArray;
     
-    public Zombie(int movementSpeed){
+    public Zombie(int movementSpeed, int health){
         this.movementSpeed = movementSpeed;
+        this.health = health;
         setSprites();
     }
     public void act()
     {
         lookForPlayer();
-        CheckIfZombieIsHit();
+        checkIfZombieIsHit();
     }
     private void setSprites(){
         spriteArray = new String[7][2];
@@ -47,7 +48,7 @@ public class Zombie extends Actor
         turnTowards(player.getPositionX(), player.getPositionY());
         action = 0;
     }
-    private void CheckIfZombieIsHit(){
+    private void checkIfZombieIsHit(){
         Bullet bullet = (Bullet) this.getOneIntersectingObject(Bullet.class);
         if(bullet!=null && bulletHitDelay == 0){
             health -= bullet.getDamage();
@@ -67,7 +68,7 @@ public class Zombie extends Actor
             if(bulletHitDelay == 10){
                 bulletHitDelay = 0;
                 triggerBulletDamage = false;
-            }
+            } 
         }
     }
     public int getDamage(){

@@ -1,40 +1,41 @@
 import greenfoot.*;
 
-/**
- * Write a description of class ButtonTemplateMethod here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public abstract class ButtonTemplateMethod extends Actor
 {
-    String buttonName;
-    public ButtonTemplateMethod(String buttonName){
+    private String buttonName;
+    private int width, height;
+    private GreenfootImage buttonImage; 
+    private GreenfootImage buttonImageRed; 
+    public ButtonTemplateMethod(String buttonName, int width, int height){
         this.buttonName = buttonName;
-        GreenfootImage buttonImage = new GreenfootImage("images\\Buttons\\"+buttonName+".png");
-        buttonImage.scale(200, 100);
+        buttonImage = new GreenfootImage("images\\Buttons\\"+buttonName+".png");
+        buttonImageRed = new GreenfootImage("images\\Buttons\\"+buttonName+"_red.png");
+        buttonImage.scale(width, height);
+        buttonImageRed.scale(width, height);
         setImage(buttonImage);
     }
     public void act(){
-        CheckIfMouseIsOverButton();
-        CheckIfButtonIsPressed();
+        checkIfMouseIsOverButton();
+        checkIfButtonIsPressed();
     }
-    private void CheckIfMouseIsOverButton(){
+    private void checkIfMouseIsOverButton(){
         if(Greenfoot.mouseMoved(this)){
-            GreenfootImage buttonImage = new GreenfootImage("images\\Buttons\\"+buttonName+"_red.png");
-            buttonImage.scale(200, 100);
-            setImage(buttonImage);
+            setImage(buttonImageRed);
         }else if(Greenfoot.mouseMoved(null)){
-            GreenfootImage buttonImage = new GreenfootImage("images\\Buttons\\"+buttonName+".png");
-            buttonImage.scale(200, 100);
             setImage(buttonImage);
         }
     }
-    private void CheckIfButtonIsPressed(){
+    private void checkIfButtonIsPressed(){
         if(Greenfoot.mouseClicked(this)){
-            DoWhenButtonIsPressed();
+            doWhenButtonIsPressed();
             Greenfoot.playSound("sounds\\ButtonSounds\\button-clicked.mp3");
         }
     }
-    public abstract void DoWhenButtonIsPressed();
+    public abstract void doWhenButtonIsPressed();
+    public GreenfootImage getButtonImage(){
+        return buttonImage;
+    }
+    public GreenfootImage getButtonImageRed(){
+        return buttonImageRed;
+    }
 }

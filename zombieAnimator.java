@@ -14,7 +14,7 @@ public class zombieAnimator extends Actor
         setSprites();
     }
     public void act(){
-        ChangeImage();
+        changeImage();
     }
     private void setSprites(){
         spriteArray = zombie.getZombieSprites();
@@ -22,7 +22,7 @@ public class zombieAnimator extends Actor
         sprite.scale(50,50);
         zombie.setImage(sprite);
     }
-    private void ChangeImage(){
+    private void changeImage(){
         changeDelay--;
         if(changeDelay == 0){
             if(imageIndex == spriteArray.length || spriteArray[imageIndex][zombie.getAction()] == null){

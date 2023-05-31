@@ -10,7 +10,7 @@ public class Bullet extends Actor
 {
     private int bulletSpeed, damage;
     private boolean bulletHit = false;
-    GreenfootImage bulletImage = new GreenfootImage("images\\Bullets\\HandgunBullets\\handgunBullet2.png");
+    private GreenfootImage bulletImage = new GreenfootImage("images\\Bullets\\HandgunBullets\\handgunBullet2.png");
     
     public Bullet(int bulletSpeed, int damage){
         this.bulletSpeed = bulletSpeed;
@@ -22,9 +22,9 @@ public class Bullet extends Actor
     public void act()
     {
         move(bulletSpeed);
-        CheckIfBulletIsOutOfBoundary();
+        checkIfBulletIsOutOfBoundary();
     }
-    private void CheckIfBulletIsOutOfBoundary(){
+    private void checkIfBulletIsOutOfBoundary(){
         if(this.isAtEdge()){
             getWorld().removeObject(this);
         }

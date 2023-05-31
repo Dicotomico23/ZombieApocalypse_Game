@@ -12,4 +12,6 @@ comment5.params=weaponImage
 comment5.target=void\ setWeaponImage(greenfoot.GreenfootImage)
 comment6.params=
 comment6.target=greenfoot.GreenfootImage\ getWeaponImage()
-numComments=7
+comment7.params=noReloading
+comment7.target=void\ setNoReloading(boolean)
+numComments=8

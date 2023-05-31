@@ -7,5 +7,5 @@ comment2.target=void\ act()
 comment3.params=
 comment3.target=void\ setSprites()
 comment4.params=
-comment4.target=void\ ChangeImage()
+comment4.target=void\ changeImage()
 numComments=5

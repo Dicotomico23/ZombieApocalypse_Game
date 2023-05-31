@@ -1,12 +1,6 @@
 import greenfoot.Actor;
 import greenfoot.*;
 
-/**
- * Write a description of class Rifle here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Rifle extends FireArm
 {
     private final int maxAmmo = 50;

@@ -3,65 +3,101 @@ import java.util.Random;
 
 public class Game extends World
 {
-    private final int ZOMBIE_SPAWN_DELAY_RAND_LIMIT = 300, TOTAL_NUM_ZOMBIES = 100, STARTING_NUM_ZOMBIES = 10;
+    private int zombieSpawningSpeedLimit = 300, startingNumZombies = 10, zombiesPerRound = 10, powerUpSpawnDelay = 700, zombieSpeedLimit = 2, zombieHealth = 70;
+    
     private final int randBoundaryX = 450, randBoundaryY = 300;
     private final int ammoTextPositionX = 100, ammoTextPositionY = getHeight()-150;
     private final int healthTextPositionX = 100, healthTextPositionY = getHeight()-180;
     private final int killsTextPositionX = 100, killsTextPositionY = getHeight()-210;
     private final int gunPicturePositionX = 60, gunPicturePositionY = getHeight()-130;
+
+    private int contZombies = startingNumZombies, spawnDelayZombies = zombieSpawningSpeedLimit, spawnDelayPowerUps = powerUpSpawnDelay;
+    private int RoundCont = 1, time = 0, kills = 0, auxKills = 0;
+    private boolean keepSpawning = true, keepSpawningPowerUps = true, triggerSetRound = true;
     
-    private int contZombies = 0;
-    private int spawnDelay = ZOMBIE_SPAWN_DELAY_RAND_LIMIT, zombieSpeedLimit = 2;
-    private boolean keepSpawning = true;
     private Random rand = new Random();
     private Rifle weapon = new Rifle();
     private Soldier player = new Soldier(weapon);
     private playerAnimator animator = new playerAnimator(player);
+    private GreenfootImage bg;
     
-    public int kills = 0;
-    
-    public Game()
+    public Game(String MapImagePath, String backgroundSoundPath)
     {    
-        super(900, 600, 1);
-        setBackground("images\\Background\\ZombieGame_background.png");
+        super(900, 600, 1, true);
+        setMap(MapImagePath);
+        showImages(); 
+        spawnPlayer();
         addObject(animator, 450, 300);
-        showImages();
-        SpawnPlayer();
         chooseWeapon();
-        SpawnInitialZombies();
-        PlayZombieSounds();
+        spawnInitialZombies();
+        playZombieSounds();
     }
     public void act(){
-        SpawnZombies(TOTAL_NUM_ZOMBIES, zombieSpeedLimit);
+        spawnZombies(zombieSpeedLimit);
+        spawnPowerUps(); 
         showHud();
+        setRound();
     }
-    private void SpawnPlayer(){
+    private void spawnPlayer(){
         addObject(player,450, 300);
     }
     private void chooseWeapon(){
         addObject(weapon,450, 300);
         weapon.setImage((GreenfootImage)null);
     }
-    private void SpawnInitialZombies(){
-        for(int contInitialZombies=0; contInitialZombies < STARTING_NUM_ZOMBIES; contInitialZombies++){
+    private void spawnInitialZombies(){
+        for(int contInitialZombies=0; contInitialZombies < startingNumZombies; contInitialZombies++){
             int walkingSpeed = rand.nextInt(zombieSpeedLimit) + 1;
             setZombieSpawningPosition(walkingSpeed);
         }
     }
-    private void SpawnZombies(int numZombies, int zombieSpeedLimit){
-        spawnDelay--;
-        if(spawnDelay == 0 && keepSpawning == true){
-            int walkingSpeed = rand.nextInt(zombieSpeedLimit) + 1;
-            setZombieSpawningPosition(walkingSpeed);
-            contZombies++;
-            int randomSpawnDelay = rand.nextInt(20+(ZOMBIE_SPAWN_DELAY_RAND_LIMIT-20));
-            spawnDelay = randomSpawnDelay;
+    private void spawnPowerUps(){
+        if(keepSpawningPowerUps == true)
+            spawnDelayPowerUps--;
+        if(spawnDelayPowerUps == 0 && keepSpawningPowerUps == true){
+            weapon.setNoReloading(false);
+            player.activateShield(false);
+            keepSpawningPowerUps = false;
+            randomizePowerUps();
+            spawnDelayPowerUps = powerUpSpawnDelay;
         }
-        if(contZombies == numZombies - STARTING_NUM_ZOMBIES){keepSpawning = false;}
+    }
+    private void randomizePowerUps(){
+        int randomPowerUp = rand.nextInt(3);
+        int randomPositionPowerUpX = rand.nextInt(getWidth()-100);
+            int randomPositionPowerUpY = rand.nextInt(getHeight()-100);
+        switch(randomPowerUp){
+            case 0: addObject(new MaxHealth(), randomPositionPowerUpX, randomPositionPowerUpY);
+            break;
+            case 1: addObject(new Shield(), randomPositionPowerUpX, randomPositionPowerUpY);
+            break;
+            case 2: addObject(new NoReloading(), randomPositionPowerUpX, randomPositionPowerUpY);
+            break;
+        }
+    }
+    private void setRound(){
+        showText("Round: "+(RoundCont-1), getWidth()-100, getHeight()-100);
+        if((kills%zombiesPerRound) == 0  && triggerSetRound == true){
+            triggerSetRound = false;
+            zombieHealth += 20;
+            RoundCont++;
+            auxKills= kills;
+        }
+        if(kills == auxKills+1){triggerSetRound = true;}
+    }
+    private void spawnZombies(int zombieSpeedLimit){
+        spawnDelayZombies--;
+        if(spawnDelayZombies == 0){
+            int walkingSpeed = rand.nextInt(zombieSpeedLimit) + 1; 
+            setZombieSpawningPosition(walkingSpeed);
+            int randomSpawnDelay = rand.nextInt(20+(zombieSpawningSpeedLimit-20));
+            spawnDelayZombies = randomSpawnDelay;
+            contZombies++;
+        }
     }
     private void setZombieSpawningPosition(int walkingSpeed){
         int spawningCorner = rand.nextInt(4);
-        Zombie zombie = new Zombie(walkingSpeed);
+        Zombie zombie = new Zombie(walkingSpeed, zombieHealth);
         switch(spawningCorner){
             case 0: addObject(zombie, randBoundaryX + getWidth(), randBoundaryY + getHeight());
             break;
@@ -72,7 +108,7 @@ public class Game extends World
             case 3: addObject(zombie, randBoundaryX - getWidth(), randBoundaryY + getHeight());
             break;
         }
-        addObject(new zombieAnimator(zombie), 450, 300);
+        addObject(new zombieAnimator(zombie),0,0);
     }
     private void showImages(){
         GreenfootImage Image = weapon.getWeaponImage();
@@ -84,13 +120,13 @@ public class Game extends World
         showText("Health: "+player.getHealth(), healthTextPositionX, healthTextPositionY);
         showText("Kills: "+kills, killsTextPositionX, killsTextPositionY);
     }
-    private void PlayZombieSounds(){
+    private void playZombieSounds(){
         GreenfootSound backgroundMusic = new GreenfootSound("sounds\\AmbienceMusic\\BackgroundMusic.mp3");
         GreenfootSound zombieSounds = new GreenfootSound("sounds\\ZombieSounds\\ZombieHorde_0.mp3");
         backgroundMusic.playLoop();
         zombieSounds.playLoop();
     }
-    public void GameOver(){
+    public void gameOver(){
         removeObjects(getObjects(Actor.class));
         showText("GAME OVER", 450, 300);
         showText(null, ammoTextPositionX, ammoTextPositionY);
@@ -105,9 +141,24 @@ public class Game extends World
         return weapon;
     }
     public void setZombieSpawnDelay(int delay){
-        spawnDelay = delay;
+        spawnDelayZombies = delay;
     }
     public void updateKillScore(){
         kills++;
+    }
+    public void setKeepSpawningPowerUps(boolean keepSpawningPowerUps){
+        this.keepSpawningPowerUps = keepSpawningPowerUps;
+    }
+    public void setMap(String MapImagePath){
+        bg = new GreenfootImage(MapImagePath);
+        bg.scale(2700, 1800);
+        setBackground(bg);
+    }
+    public void setDifficulty(int zombieSpawningSpeedLimit, int zombieSpeedLimit, int startingNumZombies, int zombiesPerRound, int powerUpSpawnSpeed){
+        this.zombieSpawningSpeedLimit = zombieSpawningSpeedLimit;
+        this.zombieSpeedLimit = zombieSpeedLimit;
+        this.startingNumZombies = startingNumZombies;
+        this.zombiesPerRound = zombiesPerRound;
+        this.powerUpSpawnDelay = powerUpSpawnSpeed;    
     }
 }

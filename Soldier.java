@@ -13,38 +13,35 @@ public class Soldier extends Actor
     private final int DIRECTION_DOWN = 2;
     private final int DIRECTION_UP = 3;
     private final int NOT_MOVING = -1;
-    private final int offsetX = 5, offsetY = 5;
+    private final int offsetX = 3, offsetY = 3;
     private final int COUNTDOWN_RELOAD_START_VALUE = 100;
-    private int reloadingDelay = 0, zombieHitDelay = 0;
-    private int direction = 0;
-    private int action;
-    private boolean triggerReloadingDelay = false, triggerZombieDamage = false, zombieKilled = false;
-    private String[][] images;
+    
+    private int reloadingDelay = 0, zombieHitDelay = 0, direction = 0, action, health = 100;
+    private boolean triggerReloadingDelay = false, triggerZombieDamage = false, zombieKilled = false, shield = false, noReloading = false;
     private FireArm weapon;
-    private int health = 100;
 
     public Soldier(FireArm weapon){
         this.weapon = weapon;
     }
     public void act()
     {
-        CheckMousePosition();
-        CheckKeyPressed();
+        checkMousePosition();
+        checkKeyPressed();
         setDirection();
-        CheckIfShooting();
-        CheckIfWeaponIsLoaded();
-        CheckIfPlayerIsHit();
+        checkIfShooting();
+        checkIfWeaponIsLoaded();
+        checkIfPlayerIsHit();
     }
     public String[][] getWeaponSprites(){
         return weapon.getPlayerSprites();
     }
-    private void CheckMousePosition(){
+    private void checkMousePosition(){
         MouseInfo mouse = Greenfoot.getMouseInfo();
         if(mouse != null){
             turnTowards(mouse.getX(), mouse.getY());
         }
     }
-    private void CheckKeyPressed(){
+    private void checkKeyPressed(){
         if(Greenfoot.isKeyDown("a")){
             direction = DIRECTION_LEFT;
             action = 1;
@@ -84,7 +81,7 @@ public class Soldier extends Actor
             }
         }
     }
-    private void CheckIfShooting(){
+    private void checkIfShooting(){
         if(Greenfoot.isKeyDown("space")){
             if(weapon.isReloaded() == true){
                 weapon.shootBullet();
@@ -92,7 +89,7 @@ public class Soldier extends Actor
             }
         }
     }
-    private void CheckIfWeaponIsLoaded(){
+    private void checkIfWeaponIsLoaded(){
         if(reloadingDelay == 0){
             weapon.reload();
             triggerReloadingDelay = false;
@@ -106,15 +103,15 @@ public class Soldier extends Actor
             action = 2;
         }
     }
-    private void CheckIfPlayerIsHit(){
+    private void checkIfPlayerIsHit(){
         Zombie zombie = (Zombie) this.getOneIntersectingObject(Zombie.class);
-        if(zombie!=null && zombieHitDelay == 0){
+        if(zombie!=null && zombieHitDelay == 0 && shield == false){
             health -= zombie.getDamage();
             triggerZombieDamage = true;
             zombie.setAction(1);
             if(health <= 0){
                 Game scene = (Game) getWorld();
-                scene.GameOver();
+                scene.gameOver();
             }
         }
         if(triggerZombieDamage == true){
@@ -136,5 +133,11 @@ public class Soldier extends Actor
     }
     public int getHealth(){
         return health;
+    }
+    public void maxHealth(){
+        health = 100;
+    }
+    public void activateShield(boolean shield){
+        this.shield = shield;
     }
 }

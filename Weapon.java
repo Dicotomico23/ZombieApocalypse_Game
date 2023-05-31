@@ -8,4 +8,5 @@ public interface Weapon
     String [][] getPlayerSprites();
     void setWeaponImage(GreenfootImage weaponImage);
     GreenfootImage getWeaponImage();
+    void setNoReloading(boolean noReloading);
 }
