@@ -1,5 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.Writer;
 
 public class Game extends World
 {
@@ -126,11 +133,12 @@ public class Game extends World
         backgroundMusic.playLoop();
         zombieSounds.playLoop();
     }
-    public void gameOver(){
+    public void gameOver() throws IOException {
         removeObjects(getObjects(Actor.class));
         showText("GAME OVER", 450, 300);
         showText(null, ammoTextPositionX, ammoTextPositionY);
         showText(null, healthTextPositionX, healthTextPositionY);
+        saveHighScore();
         removeObjects(getObjects(null));
         Greenfoot.stop();
     }
@@ -160,5 +168,37 @@ public class Game extends World
         this.startingNumZombies = startingNumZombies;
         this.zombiesPerRound = zombiesPerRound;
         this.powerUpSpawnDelay = powerUpSpawnSpeed;    
+    }
+    private void saveHighScore() throws java.io.IOException {
+        int newScore = kills;
+        int previousScore = 0;
+        try {
+            File file = new File("files\\highScore.txt");
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else{
+                Scanner scanner = new Scanner(file);
+                while(scanner.hasNextInt())
+                {
+                     previousScore = scanner.nextInt();
+                }
+                if(newScore > previousScore){
+                    showText("new High Score: "+newScore, 450, 400);
+                    Writer writer = null;
+                    try {
+                        writer = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(file), "utf-8"));
+                        writer.write(newScore);
+                    } catch (IOException ex) {
+                        System.out.println("Could not write on this file.");
+                    } finally {
+                       try {writer.close();} catch (Exception ex) {/*ignore*/}
+                    }
+                }
+            }
+        }catch (IOException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
+        }
     }
 }

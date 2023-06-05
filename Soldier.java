@@ -111,7 +111,14 @@ public class Soldier extends Actor
             zombie.setAction(1);
             if(health <= 0){
                 Game scene = (Game) getWorld();
-                scene.gameOver();
+                try
+                {
+                    scene.gameOver();
+                }
+                catch (java.io.IOException ioe)
+                {
+                    ioe.printStackTrace();
+                }
             }
         }
         if(triggerZombieDamage == true){

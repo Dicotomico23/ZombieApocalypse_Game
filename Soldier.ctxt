@@ -30,5 +30,5 @@ comment7.target=void\ checkIfShooting()
 comment8.params=
 comment8.target=void\ checkIfWeaponIsLoaded()
 comment9.params=
-comment9.target=void\ CheckIfPlayerIsHit()
+comment9.target=void\ checkIfPlayerIsHit()
 numComments=16
